@@ -1,0 +1,49 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Inicio{% endblock %}
+
+{% block content %}
+
+<div class="index-body" >
+  {%if user.is_authenticated and not user.is_staff%}
+  <br>
+  <div class="index-body" style="margin-left: -550px; margin-top: 50px">
+    <img id="logoinsti" style="margin-top: 50px; margin-left: 700px; width: 13%" src="/static/imagenes/Logo_i210_fondo_trans.png">
+  <ul style="margin-top: 50px; margin-left: 750px; list-style: none;">
+    <div class="d-grid gap-3 col-12 mx-auto">
+      <a href="{% url 'inscripcionFinal_est' %}" class="btn btn-primary link-light link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" style="text-decoration: none; font-size: 15px;font-weight: bolder; background-color:#213292; border-radius: 15px; border-color: #213292; letter-spacing: 2px;font-family: Arial; margin-left: -200px;">Inscribirse a mesa de final</a></button>
+    </div>
+  </body>
+  </div>
+  {%elif user.is_authenticated and user.is_staff%}  
+  <br>
+    <div class="index-body" style="margin-left: -550px; margin-top: 50px">
+      <img id="logoinsti" style="margin-top: 50px; margin-left: 700px; width: 13%" src="/static/imagenes/Logo_i210_fondo_trans.png">
+    <ul style="margin-top: 50px; margin-left: 750px; list-style: none;">
+      <div class="d-grid gap-3 col-12 mx-auto">
+        <a href="/altaMateria/" class="btn btn-primary link-light link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" style="text-decoration: none; font-size: 15px;font-weight: bolder; background-color:#213292; border-radius: 15px; border-color: #213292; letter-spacing: 2px;font-family: Arial; margin-left: -200px;">Creación de materias</a></button>
+        <a href="/lista_materias_admin/" class="btn btn-primary link-light link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" style="text-decoration: none; font-size: 15px;font-weight: bolder; background-color:#213292; border-radius: 15px; border-color: #213292; letter-spacing: 2px;font-family: Arial; margin-left: -200px;">Listado de materias</a></button>
+        <a href="{% url 'altaMesa' %}" class="btn btn-primary link-light link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" style="text-decoration: none; font-size: 15px;font-weight: bolder; background-color:#213292; border-radius: 15px; border-color: #213292; letter-spacing: 2px;font-family: Arial; margin-left: -200px;">Dar de alta mesa de final</a></button>
+        <a href="/mesas_lista" class="btn btn-primary link-light link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" style="text-decoration: none; font-size: 15px;font-weight: bolder; background-color:#213292; border-radius: 15px; border-color: #213292; letter-spacing: 2px;font-family: Arial; margin-left: -200px;">Ver mesas de final</a></button>
+        <a href="{% url 'inscripcionFinal' %}" class=" btn btn-primary link-light link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" style="text-decoration: none; font-size: 15px;font-weight: bolder; background-color:#213292; border-radius: 15px; border-color: #213292; letter-spacing: 2px;font-family: Arial; margin-left: -200px;">Inscribir estudiante a final</a></button>
+        <a href="/inscripcion_finales_lista" class=" btn btn-primary link-light link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" style="text-decoration: none; font-size: 15px;font-weight: bolder; background-color:#213292; border-radius: 15px; border-color: #213292; letter-spacing: 2px;font-family: Arial; margin-left: -200px;">Ver inscripciones a finales</a></button>
+        
+  </div>
+    </body>
+    </ul>
+  </div>
+
+  {%else%}
+  <br>
+    <h2>Hola, bienvenidos!</h2>
+    <h4>Para acceder al sistema, loguéese.<br>Si no posee usuario, póngase en contacto con el instituto<br>Muchas Gracias!</h4>
+  {%endif%}
+</div>
+
+<style>
+  body {
+      overflow-y:hidden;
+    }
+</style>  
+{% endblock %}
+

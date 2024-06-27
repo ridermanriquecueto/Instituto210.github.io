@@ -1,0 +1,48 @@
+<!-- lista_materias_user.html -->
+{% extends 'base/base.html' %}
+
+{% block title %}Lista de Materias{% endblock %}
+
+{% block content %}
+
+    <div class="card">
+        <div class="card-header">
+        </div>
+        <div class="card-body">
+            <h4 class="card-title">Lista de Materias</h4>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th class="h5">ID</th>
+                        <th class="h5">Nombre</th>
+                        <th class="h5">Año</th>
+                        <th class="h5">Carrera</th>
+                        <th class="h5">Profesor</th>
+                        <th class="h5">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if materias %}
+                        {% for materia in materias %}
+                            <tr>
+                                <td class="h6">{{materia.id}}</td>
+                                <td class="h6">{{materia.nombre_materia}}</td>
+                                <td class="h6">{{materia.anio}}</td>
+                                <td class="h6">{{materia.carrera.nombre_carrera}}</td>
+                                <td class="h6">{{materia.profesor.nombres}}</td>
+                                <td>
+                                    <a name="" id="" class="btn btn-primary" href="#" role="button">Inscribirme</a>
+                                    <a name="" id="" class="btn btn-primary" href="#" role="button">Ver detalles</a>
+                                    <a name="" id="" class="btn btn-danger" href="#" role="button">Dar de baja</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <div class="alert alert-danger"> No hay materias disponibles.</div>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,51 @@
+
+{% extends 'base/base.html' %}
+
+{% block title %}Lista de Mesas{% endblock %}
+
+{% block content %}
+{% if request.user.is_staff or request.user.is_superuser or request.user.admin %}
+
+<div class="card">
+    <div class="card-header">
+    </div>
+    <div class="card-body"> 
+        <h4 class="card-title" style="margin-left: 55px;">Mesas</h4>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="h5">Materia</th>
+                    <th class="h5">Llamado</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for MesaFinal in object_list %}
+                <tr>
+                    <td class="h6">{{MesaFinal.materia}}</td>
+                    <td class="h6" id='llamado{{ MesaFinal.id }}'>{{MesaFinal.llamado}}</td>
+                    <td>
+                        <a name="" id="" class="btn btn-primary" href="/edit_mesa/{{ MesaFinal.id }}" role="button"><img src="/static/imagenes/edit.png" height="20px" width="20px"></img></a>
+                        <a name="" id="" class="btn btn-danger" href="/delete_mesa/{{ MesaFinal.id }}" role="button"><img src="/static/imagenes/eliminar.png" height="20px" width="20px"></img></a>
+                    </td>
+                </tr>
+                <script>
+                    var elemId = 'llamado{{MesaFinal.id}}';
+                    var elem = document.getElementById(elemId);
+                    elem.innerHTML=elem.innerHTML.substring(0, elem.innerHTML.length - 10);  
+                </script>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% else %}
+
+<div class="text-center">
+    <img src="/static/imagenes/error403.jpg" class="rounded"></img>
+  <h3>No deberías estar acá. Para volver, <a href="/">hace click acá</a></h3>
+</div>
+
+{% endif %}
+
+{% endblock %}

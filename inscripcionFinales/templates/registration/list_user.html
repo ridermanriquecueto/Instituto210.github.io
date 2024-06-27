@@ -1,0 +1,169 @@
+
+{% extends 'base/base.html' %}
+
+{% block title %}Registro de usuario{% endblock %}
+
+{% block content %}
+{% if request.user.is_staff or request.user.is_superuser or request.user.admin %}
+
+<div id="alertaNoDNI"class="alert alert-warning alert-dismissible fade show fs-6 z-n1" hidden=true role="alert" style="position: fixed; top: 0; right: 0">
+  <strong>Debe ingresar un DNI para hacer la busqueda</strong>
+  <button type="button" class="btn-close" onclick="ocultarAlerta1()" ></button>
+</div>
+<div id="errorDNI"class="alert alert-danger alert-dismissible fade show fs-6" hidden=true role="alert" style="position: fixed; top: 0; right: 0">
+  <strong>DNI no registrado</strong>
+  <button type="button" class="btn-close" onclick="ocultarAlerta2()" ></button>
+</div>
+<div class="card" style="margin-top: 0px;">
+    <div class="card-header rounded-top" style="background-color: #3A4481">
+        <h3 style="text-align: center; color: #ffff; margin-bottom: -15px;">Registro de Usuarios</h3>
+        <form class="d-flex" role="search" style="margin-left: 75%;">
+          <input class="form-control me-2" class="h-25 d-inline-block" style="margin-top: 10px" placeholder="DNI"id="busquedaDni" aria-label="Buscar">
+          <a class="btn btn-primary" onclick="busqueda()"style="margin-top: 10px"><img src="/static/imagenes/Lupita.png" height="20px" width="20px"></img></a>
+        </form>
+    </div>
+    <div class="card-body">
+        <table class="table">
+            <thead>
+                <tr>
+                  <th class="h5">ID</th>
+                    <th class="h5">Email</th>
+                    <th class="h5">Username</th>
+                    <th class="h5">Nombre completo</th>
+                    <th class="h5">DNI</th>
+                    <th class="h5">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for usuarios in object_list %}
+                <tr class="usuario" hidden=True>
+                    <td class="h6" id='{{usuarios.dni}}'>{{usuarios.id}}</td>
+                    <td class="h6">{{usuarios.email}}</td>
+                    <td class="h6">{{usuarios.username}}</td>
+                    <td class="h6">{{usuarios.nombre_completo}}</td>
+                    <td class="h6">{{usuarios.dni}}</td>
+                    <td>
+                      <a name="" id="" class="btn btn-primary" href="/show_user/{{ usuarios.id }}" role="button"><img src="/static/imagenes/view.png" height="20px" width="20px"></img></a>
+                      <a name="" id="" class="btn btn-primary" href="/edit_user/{{ usuarios.id }}" role="button"><img src="/static/imagenes/edit.png" height="20px" width="20px"></img></a>
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal{{ usuarios.id }}">
+                          <img src="/static/imagenes/eliminar.png" height="20px" width="20px"></img>
+                          </button>
+                          
+                          <!-- Modal -->
+                          <div class="modal fade" id="exampleModal{{ usuarios.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h1 class="modal-title fs-5" id="exampleModalLabel">Advertencia</h1>
+                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body fs-6">
+                                  ¿Esta seguro que desea eliminar el usuario?
+                                </div>
+                                <div class="modal-footer">
+                                 <a name="" id="" class="btn btn-danger" href="/delete_user/{{ usuarios.id }}" role="button">BORRAR</a>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        
+                    
+                    
+                    
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <nav aria-label="..." style="margin-left: 310px;">
+          <ul class="pagination">
+          <li class="page-item" id='btnAnt' style='user-select: none;'>
+          <button class="page-link" id='btnAnt_' style="cursor: pointer;"onclick="paginaAnt()">←</button>
+          </li>
+          <li class="page-item" id='btnSig' sytle='user-select: none;'>
+          <button class="page-link" id='btnSig_' onclick="paginaSig()">→</button>
+          </li>
+          </ul>
+          </nav>
+    </div>
+</div>
+<script>
+  var pagina = 1
+  if (pagina = 1)
+  {
+    document.getElementById("btnAnt").className="page.item disabled"
+  }
+  let elementos = document.querySelectorAll('.usuario');
+  for (let i = 0; i <= pagina*10-1; i++) {
+    elementos[i].hidden=false
+    }
+  function paginaSig()
+  {
+    let elementos = document.querySelectorAll('.usuario');
+    for (let i = pagina*10-10; i <= pagina*10-1; i++) {
+      try{elementos[i].hidden=true}
+      catch(e){console.log("Anda, todo pelota.")}
+      }  
+    pagina=pagina+1
+    if (pagina>1)
+    {
+      document.getElementById("btnAnt").className="page-item active"
+    }
+    for (let i = pagina*10-10; i <= pagina*10-1; i++) {
+      try{elementos[i].hidden=false}
+      catch(e){console.log("No hay mas usuarios")
+      document.getElementById("btnSig").className="page.item disabled"
+      }
+      }
+  } 
+  function paginaAnt()
+  {
+    document.getElementById("btnSig").className="page.item active"    
+    let elementos = document.querySelectorAll('.usuario');
+    for (let i = pagina*10-10; i <= pagina*10-1; i++) {
+      try{elementos[i].hidden=true}
+      catch(e){console.log("Parmisano no mires esto")}
+      }
+    pagina=pagina-1
+    if (pagina>1)
+    {
+      document.getElementById("btnAnt").className="page-item active"
+    }
+    else{document.getElementById("btnAnt").className="page-item disabled"}
+    for (let i = pagina*10-10; i <= pagina*10-1; i++) {
+      elementos[i].hidden=false
+      }
+  }   
+
+  function ocultarAlerta1()
+  {document.getElementById("alertaNoDNI").hidden=true}
+  function ocultarAlerta2()
+  {document.getElementById("errorDNI").hidden=true}
+  function busqueda()
+  {
+    if(document.getElementById("busquedaDni").value && document.getElementById("busquedaDni").value != 'None' )
+    {
+      var dni_usuario = document.getElementById("busquedaDni").value
+      if(document.getElementById(dni_usuario))
+      {
+        var id_usuario = document.getElementById(dni_usuario).innerHTML
+        location.href ="/show_user/"+id_usuario;
+      }
+      else{console.log("DNI no registrado");
+      document.getElementById("errorDNI").hidden=false;}
+    }
+    else{console.log("Ingrese un DNI");
+    document.getElementById("alertaNoDNI").hidden=false;
+  }
+  }
+</script>  
+{% else %}
+
+<div class="text-center">
+    <img src="/static/imagenes/error403.jpg" class="rounded"></img>
+  <h3>No deberías estar acá. Para volver, <a href="/">hace click acá</a></h3>
+</div>
+
+{% endif %}
+
+{% endblock %}

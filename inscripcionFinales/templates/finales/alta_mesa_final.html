@@ -1,0 +1,30 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Alta de Mesa Final{% endblock %}
+
+{% block content %}
+    <h1>Alta de Mesa Final</h1>
+    <div class="card" style="background-color: #d7d1dc">
+        <div class="card-body">      
+    <form method="post" style="font-size: 1.9em;">
+    <form method="post">
+        {% csrf_token %}
+        <div class="mb-3 fs-5">
+            <label for="{{ form.materia.id_for_label }}">Materia:</label>
+            {{ form.materia }}
+        </div>
+
+        <div class="mb-3 fs-5">
+            <label for="{{ form.llamado.id_for_label }}">Llamado:</label>
+            {{ form.llamado }}
+        </div>
+        <br>
+        <button type="submit" class="btn btn-primary" style="margin-left: 85px;">Guardar</button>
+    </form>
+
+<style>
+    body {
+        overflow-y:hidden;
+      }
+</style>  
+{% endblock %}

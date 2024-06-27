@@ -1,0 +1,200 @@
+Actualizaciones en las combinaciones de teclas … El jueves, 1 de agosto de 2024, las combinaciones de teclas de Drive se actualizarán para que puedas navegar escribiendo las primeras letras.Más información
+<!-- lista_materias_admin.html -->
+{% extends 'base/base.html' %}
+
+{% block title %}Lista de Materias{% endblock %}
+
+{% block content %}
+
+<div class="card" style="margin-top: 50px; margin-bottom: 50px;">
+    <div class="card-header rounded-top" style="background-color: #3A4481; color: #ffffff;">
+            <div class="d-flex justify-content-center align-items-center">
+                <h3 >Listado de Materias</h3>
+            </div>
+        <div class="input-group my-1"> 
+            <input class="form-control form-control-sm me-0" id="myInput" type="text" placeholder="Escribe para filtrar...">
+        </div>
+    </div>
+    <form id="formEliminarTodo" method="post" action="{% url 'eliminar_materias_seleccionadas' %}">
+        {% csrf_token %}
+    <table class="table table-striped table-bordered table-hover table-selected" id="myTable">
+        {% load static %}
+        <thead>
+            <tr class="text-center"> <!-- Agregar etiqueta <tr> para cada fila de encabezado -->
+                <th class="h5""form-check"><!-- Seleccionar todo -->
+                    <input class="form-check-input" type="checkbox" id="checkTodos">
+                </th>
+                <th class="h5">ID</th>
+                <th class="h5">Nombre</th>
+                <th class="h5">Año</th>
+                <th class="h5">Carrera</th>
+                <th class="h5">Profesor</th>
+                <th class="h5">Dia</th>
+                <th class="h5">Horario</th>
+                <th class="h5">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Modal eliminar -->
+            <div class="card-body d-flex justify-content-between align-items-center" style="padding-bottom: 20px;">
+                <div>
+                    <a href="#" id="eliminarSeleccionados" class="btn btn-danger">
+                        <i class="fas fa-trash-alt"></i> Eliminar seleccionados
+                    </a>
+                </div>    
+                <div>
+                    <a href="{% url 'altaMateria' %}?previous=lista_materias_admin" class="btn btn-primary ">
+                        <i class="fas fa-plus"></i> Agregar Materia
+                    </a>          
+                </div>    
+                    <!-- Modal de confirmación de eliminación -->
+                    <div class="modal fade" id="confirmarEliminar" tabindex="-1" aria-labelledby="modalTitulo" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h3 class="modal-title-custom" id="modalTitulo">Confirmar Eliminación</h3>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body modal-pregunta-custom" id="modalMensaje"></div>
+                                <div class="modal-footer modal-rederigir-custom">
+                                    <form id="formEliminarTodo" method="post" action="{% url 'eliminar_materias_seleccionadas' %}">
+                                        {% csrf_token %}
+                                        <button class="btn btn-danger" type="submit">Eliminar</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- advertencia de selección -->
+                    <div class="modal fade" id="modalSeleccionar" tabindex="-1" aria-labelledby="modalSeleccionarLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-body">
+                                    <h5>Atención:</h5><br>
+                                    <h6>Debe seleccionar al menos una materia.</h6>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cerrar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% if materias %}
+            {% for materia in materias %}
+            <tr class="text-center">
+                <td><input type="checkbox" name="materia_ids" value="{{ materia.id }}"></td>
+                <td class="h6">{{materia.id}}</td>
+                <td class="h6">{{materia.nombre_materia}}</td>
+                <td class="h6">{{materia.anio}}</td>
+                <td class="h6">{{materia.carrera.nombre_carrera}}</td>
+                <td class="h6">{{materia.profesor.nombre_completo}}</td>
+                <td class="h6">{{materia.dia}}</td>
+                <td class="h6">{{materia.Horario}}</td>
+                <td>
+                    <a title= "Ver"name="" id="" class="btn btn-primary" href="{% url 'ver_materias' id=materia.id %}" role="button"><img src="/static/imagenes/view.png" height="20px" width="20px"></img></a>
+                    <a title= "Editar"name="" id="" class="btn btn-primary" href="{% url 'editar_materia' id=materia.id %}" role="button"><img src="/static/imagenes/edit.png" height="20px" width="20px"></img></a>
+                </td>
+            </tr>
+            {% endfor %}
+            {% else %}
+                <div class="alert alert-danger"> No hay materias disponibles.</div>
+            {% endif %}
+        </tbody>
+    </table>
+        <tfoot>
+            <div class="card-footer" style="padding-bottom: 20px;">
+                <nav aria-label="...">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item {% if not materias.has_previous %}disabled{% endif %}">
+                            <a class="page-link" href="{% if materias.has_previous %}?page={{ materias.previous_page_number }}{% else %}javascript:void(0);{% endif %}" aria-label="Anterior">
+                                <span aria-hidden="true">&lsaquo;</span>
+                            </a>
+                        </li>
+                        {% for page in materias.paginator.page_range %}
+                        <li class="page-item {% if page == materias.number %}active{% endif %}" style= "z-index:0;">
+                            <a class="page-link" href="?page={{ page }}">{{ page }}</a>
+                        </li>
+                        {% endfor %}
+                        <li class="page-item {% if not materias.has_next %}disabled{% endif %}">
+                            <a class="page-link" href="{% if materias.has_next %}?page={{ materias.next_page_number }}{% else %}javascript:void(0);{% endif %}" aria-label="Siguiente">
+                                <span aria-hidden="true">&rsaquo;</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </tfoot>
+</div>        
+
+
+<!--Buscador-filtro-->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+ 
+<script>
+    function quitarTildes(texto) {
+    return texto.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    }
+    $(document).ready(function(){
+        $("#myInput").on("keyup", function() {
+            var value = quitarTildes($(this).val()); // Aplicar la función a la entrada del usuario
+            $("#myTable tbody tr").each(function() {
+                var found = false;
+                $(this).find("td").each(function() {
+                    var cellText = quitarTildes($(this).text()); // Aplicar la función a cada celda de la tabla
+                    if (cellText.indexOf(value) > -1) {
+                        found = true;
+                        return false; // Salir del bucle interno si se encuentra una coincidencia
+                    }
+                });
+                $(this).toggle(found); // Mostrar u ocultar la fila según si se encontró una coincidencia
+            });
+            $("#myTable thead tr").css("display", "table-row");
+    
+            if ($("#myTable tbody tr:visible").length === 0) {
+                $(".pagination").hide();
+            } else {
+                $(".pagination").show();
+            }
+        });
+    });
+</script>
+
+<script>
+    // Checkbox
+    $(document).ready(function() {
+        // Seleccionar/deseleccionar
+        $("#checkTodos").change(function() {
+            var isChecked = $(this).prop("checked");
+            // Seleccionar todos
+            $("input[name='materia_ids']").prop("checked", isChecked);
+        });
+    });    
+    // Script para modal 
+    $(document).ready(function() {
+        // Modal de Advertencia al hacer clic en "Eliminar seleccionados"
+        $("#eliminarSeleccionados").click(function() {
+            var checkedBoxes = $("input[name='materia_ids']:checked");
+            if (checkedBoxes.length > 0) {
+                if (checkedBoxes.length === 1) {
+                    // Solo una materia seleccionada
+                    var materiaNombre = checkedBoxes.closest('tr').find('.h6:nth-child(3)').text().trim(); 
+                    $("#modalTitulo").text("Advertencia");
+                    $("#modalMensaje").html(`<h6>¿Está seguro que desea eliminar la materia "${materiaNombre}" ?</h6>`);
+                } else {
+                    // Varias materias seleccionadas
+                    $("#modalTitulo").text("Advertencia");
+                    $("#modalMensaje").html(`<h6>¿Está seguro que desea eliminar las ${checkedBoxes.length} materias seleccionadas? </h6>`);
+                }
+                $("#confirmarEliminar").modal("show");
+            } else {
+                $("#modalSeleccionar").modal("show");
+            }
+        });
+    });
+    
+</script>
+
+{% endblock %}
