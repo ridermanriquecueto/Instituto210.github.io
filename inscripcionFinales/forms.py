@@ -1,6 +1,7 @@
 import csv
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.core.validators import RegexValidator
 from django import forms
 from django.forms import DateInput
 from django.contrib.auth.forms import UserCreationForm
@@ -66,8 +67,14 @@ class materiaCorrelativaForm(forms.ModelForm):
 
 class registri_user_form(UserCreationForm):
     email = forms.EmailField(required=True)
-    dni = forms.IntegerField(max_value=8)   
-
+    dni = forms.CharField(
+        max_length=8,
+        min_length=8,
+        validators=[
+            RegexValidator(regex='^\d{8}$', message='DNI debe contener exactamente 8 números.')
+        ],
+        required=True
+    )
     password1 = None
     password2 = None
     
